@@ -1,5 +1,10 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0a6b4d">
 <title>TamanIlmu</title>
-<meta name="claude:viewport-fit-sides" content="cover">
 <meta name="description" content="TamanIlmu - kajian singkat, doa, dzikir, Asmaul Husna dan renungan harian.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -25,6 +30,8 @@
   --gold:#e3b95f;--gold-soft:#2c2813;--hero-a:#0a3a2c;--hero-b:#0d6048;--hero-fg:#f1faf6;--hero-gold:#f2cf80;
   --shadow:0 10px 30px rgba(0,0,0,.35);--scrim:rgba(0,0,0,.65);color-scheme:dark}
 *{box-sizing:border-box;margin:0;padding:0}
+[hidden]{display:none!important}
+a{color:inherit;text-decoration:none}
 html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
 body{background:var(--bg);color:var(--fg);font-family:var(--f-body);font-size:15px;line-height:1.6;
   padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:0 110px;min-height:100vh;transition:background .3s,color .3s}
@@ -204,6 +211,8 @@ footer.note{text-align:center;color:var(--muted);font-size:.7rem;padding:10px 0}
 }
 @media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
 </style>
+</head>
+<body>
 
 <header class="topbar"><div class="wrap">
   <button class="brand" onclick="go('home')" aria-label="Beranda TamanIlmu">
@@ -542,8 +551,10 @@ function renderPage(p){const f=PAGES[p];if(f)$("p-"+p).innerHTML=f()}
 
 /* ===== BERANDA ===== */
 function hijri(){
-  try{const s=new Intl.DateTimeFormat("id-ID-u-ca-islamic-umalqura",{day:"numeric",month:"long",year:"numeric"}).format(new Date());
-    const m=s.match(/\b(\d{4})\b/);if(!m||+m[1]>1600)return"";return/H$/.test(s)?s:s+" H"}catch(e){return""}
+  try{const M=["Muharram","Safar","Rabiulawal","Rabiulakhir","Jumadilawal","Jumadilakhir","Rajab","Syaban","Ramadan","Syawal","Zulkaidah","Zulhijah"];
+    const p={};new Intl.DateTimeFormat("en-u-ca-islamic-umalqura",{day:"numeric",month:"numeric",year:"numeric"}).formatToParts(new Date()).forEach(x=>{p[x.type]=x.value});
+    const y=parseInt(p.year,10),mo=parseInt(p.month,10),d=parseInt(p.day,10);
+    if(!(y>1300&&y<1700)||!(mo>=1&&mo<=12)||!d)return"";return d+" "+M[mo-1]+" "+y+" H"}catch(e){return""}
 }
 function pageHome(){
   const h=new Date().getHours(),g=h<4?"Selamat malam":h<11?"Selamat pagi":h<15?"Selamat siang":h<18?"Selamat sore":"Selamat malam";
@@ -715,4 +726,7 @@ const PAGES={home:pageHome,kajian:pageKajian,doa:pageDoa,dzikir:()=>{const h=pag
 $("dock").innerHTML=DOCK.map(d=>`<button data-p="${d[0]}" onclick="go('${d[0]}')" aria-current="false">${ic(d[1])}<span>${d[2]}</span></button>`).join("");
 $("btnSaved").innerHTML=ic("bookmark");$("btnSet").innerHTML=ic("gear");
 applyTheme();applyAr();go("home");
+
 </script>
+</body>
+</html>
